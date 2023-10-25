@@ -25,6 +25,18 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         nWrite = self.ard.write(btCmd) # 인스턴스의 멤버인 ard에 접근: self.ard
         self.ard.flush()
         return nWrite
+    def readSerial(self):
+        nRead = self.ard.in_waiting
+        if nRead > 0:
+            btRead = self.ard.read(nRead)
+            sRead = btRead.decode()
+            return sRead
+        else: return ''
+    def talk(self, sCmd):
+        return self.writeSerial(sCmd + '\n')
+    def listen(self):
+        sRead = self.readSerial()
+        return sRead.strip()
 
 
 
