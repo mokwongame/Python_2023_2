@@ -52,6 +52,26 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         self.talk(sCmd)
         return self.listen()
 
+    # 전압계 메소드
+    def getVolt(self):
+        try: # 코드 시도(try)
+            sVolt = self.talkListen('get volt')
+            volt = float(sVolt) # 문자열 sVolt를 float(double)으로 변경
+            return volt
+        except: # try 부분에서 에러가 발생한 경우 실행되는 코드
+            print('Serial error!')
+            return -1
 
+    # Servo 메소드
+    def setServoMove(self, ang): # ang만큼 각도 회전
+        try:
+            nAng = int(ang) # 변수 ang -> int로 변경(type casting)
+            sAng = str(nAng) # int nAng -> 문자열로 변경
+            self.talk('set servo ' + sAng)
+        except:
+            print('각도 설정 오류')
+
+
+        
 
 
