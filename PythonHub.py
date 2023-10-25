@@ -6,6 +6,7 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
     # Private 멤버: __로 시작하는 변수나 함수
     __defComName = 'COM4'
     __defComBps = 9600
+    
     # 생성자(constructor): 이름은 __init__로 고정
     def __init__(self, comName = __defComName, comBps = __defComBps): # comName: Serial 이름, comBps: Serial 속도
         print('생성자 호출됨')
@@ -17,3 +18,14 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         print('소멸자 호출됨')
         if self.ard.isOpen(): # Serial이 열려(open)있는가?
             self.ard.close() # Serial을 닫음(close)
+
+    # Serial 메소드(멤버 함수)
+    def writeSerial(self, sCmd): # 인스턴스 접근하기 위한 self 추가
+        btCmd = sCmd.encode()
+        nWrite = self.ard.write(btCmd) # 인스턴스의 멤버인 ard에 접근: self.ard
+        self.ard.flush()
+        return nWrite
+
+
+
+
