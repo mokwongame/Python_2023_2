@@ -22,6 +22,7 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         # Serial 클래스의 인스턴스 생성 -> self.ard에 할당
         self.ard = Serial(comName, comBps) # C++ 경우: Serial ard;
         self.clearSerial() # Serial 입력 버퍼 초기화
+        self.clearVoltTuple() # 전압과 측정 시간을 위한 튜플 공간 확보
     # 소멸자(destructor): 이름은 __del__으로 고정
     def __del__(self):
         #print('소멸자 호출됨')
@@ -63,6 +64,20 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         except: # try 부분에서 에러가 발생한 경우 실행되는 코드
             print('Serial error!')
             return -1
+    def addVoltToTuple(self):
+        volt = self.getVolt()
+        measTime = time.time() # 현재 시간 읽기: 에포크 타임(기원후 시간, epoch time)
+        if volt >= 0: # 측정 성공
+            self.volts += (volt,) # 원소 하나인 튜플은 마지막에 , 추가
+            self.voltTimes += (measTime,)
+            return True
+        else: return False # 측정 실패
+    def clearVoltTuple(self):
+        self.volts = () # 전압 측정값을 담은 튜플; (): 현재 변수를 tuple로 초기화
+        self.voltTimes = () # 전압 측정 시간을 담은 tuple(튜플)
+    def printVoltTuple(self):
+        for (volt, measTime) in zip(self.volts, self.voltTimes)  :
+            print(f'volt = {volt} @ time = {time.ctime(measTime)}') ## f: formatted string을 의미; {...} 안을 코드로 인식해 실행 -> 그 결과는 문자열로 반환; ctime(): char time -> 현재 에포크 타임을 보기 편한 문자열 시간으로 변경
 
     # 조도계 메소드
     def getLight(self):
