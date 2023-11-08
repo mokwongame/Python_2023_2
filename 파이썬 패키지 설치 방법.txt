@@ -7,3 +7,5 @@ pip install jupyter
 -> notebook.bat에 위 명령을 넣고 notebook을 더블 클릭
 
 pip install pyserial
+
+pip install psycopg2

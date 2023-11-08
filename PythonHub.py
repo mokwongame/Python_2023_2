@@ -12,6 +12,8 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
     # Public 정적 멤버: 항상 위에 정의 -> 위에 정의되어야 밑에서 접근(호출) 가능
     def waitSerial(): # self가 없음 -> 클래스의 정적(static) 멤버: 인스턴스 멤버에 접근하지 않음
         time.sleep(PythonHub.__defWaitTime) # 단위: 초; 클래스 멤버에 접근할 때는 클래스명.(PythonHub.)
+    def wait(delaySec):
+        time.sleep(delaySec)
             
     # 생성자(constructor): 이름은 __init__로 고정
     def __init__(self, comName = __defComName, comBps = __defComBps): # comName: Serial 이름, comBps: Serial 속도
@@ -62,16 +64,38 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
             print('Serial error!')
             return -1
 
+    # 조도계 메소드
+    def getLight(self):
+        try:
+            sLight = self.talkListen('get light')
+            return sLight
+        except:
+            print('Serial error!')
+            return ''
+    
     # Servo 메소드
     def setServoMove(self, ang): # ang만큼 각도 회전
         try:
             nAng = int(ang) # 변수 ang -> int로 변경(type casting)
-            sAng = str(nAng) # int nAng -> 문자열로 변경
-            self.talk('set servo ' + sAng)
+            #sAng = str(nAng) # int nAng -> 문자열로 변경
+            #self.talk('set servo ' + sAng)
+            self.talk(f'set servo {nAng}')
         except:
             print('각도 설정 오류')
 
+    # LED 메소드
+    def setLedColor(self, color): # LED를 color로 설정
+        try:
+            sColor = str(color)
+            self.talk('set led ' + sColor)
+        except:
+            print('LED 설정 오류')
 
-        
-
-
+    # 부저 메소드
+    def setBuzzerNote(self, note, delay): # 부저 음정을 note로 설정하고 delay만큼 울림
+        try:
+            sNote = str(note)
+            nDelay = int(delay)
+            self.talk(f'set buzzer {sNote} {nDelay}')
+        except:
+            print('부저 설정 오류')
