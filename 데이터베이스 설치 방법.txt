@@ -8,3 +8,11 @@ DB이름: PostgreSQL
 
 Python adapter(DB를 제어하는 라이브러리): pip install psycopg2
 
+DB 계층: Server(Internet host=localhost, username, password) > Database(기본 이름 = postgres) > Schema(public) > Table > Column > Data
+
+
+
+
+
+
+
