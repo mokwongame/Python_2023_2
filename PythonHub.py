@@ -24,6 +24,8 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         self.ard = Serial(comName, comBps) # C++ 경우: Serial ard;
         self.clearSerial() # Serial 입력 버퍼 초기화
         self.clearVoltTuple() # 전압과 측정 시간을 위한 튜플 공간 확보
+        self.conn = None # DB의 connection
+        self.cur = None # DB의 cursor
     # 소멸자(destructor): 이름은 __del__으로 고정
     def __del__(self):
         #print('소멸자 호출됨')
@@ -58,11 +60,15 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
 
     # DB 메소드
     def connectDb(self):
-        pass
+        self.conn = psycopg2.connect(host='localhost', database='postgres', user='postgres', password='2023', port='5432') # DB connection 얻기
+        self.cur = self.conn.cursor() # connection의 cursor(커서)
     def closeDb(self):
-        pass
+        self.cur.close()
+        self.conn.close()
     def writeDb(self, cmd): # DB에 명령어 cmd 쓰기
-        pass
+        sCmd = str(cmd) # string으로 type casting
+        self.cur.execute(sCmd) # cursor에 명령어(SQL) 실행
+        self.conn.commit() # connection에 기록하기 -> cursor 명령어를 DB가 실행
     
     # 전압계 메소드
     def getVolt(self):
@@ -88,7 +94,11 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         for (volt, measTime) in zip(self.volts, self.voltTimes)  :
             print(f'volt = {volt} @ time = {time.ctime(measTime)}') ## f: formatted string을 의미; {...} 안을 코드로 인식해 실행 -> 그 결과는 문자열로 반환; ctime(): char time -> 현재 에포크 타임을 보기 편한 문자열 시간으로 변경
     def countVoltTable(self):
-        pass
+        self.connectDb()
+        self.writeDb('SELECT COUNT(*) FROM volt_table')
+        nCount = self.cur.fetchone()[0]
+        self.closeDb()
+        return nCount
     def insertVoltTable(self): # 전압 측정값 하나를 DB에 추가
         pass
     def clearVoltTable(self): # DB에 저장된 전압 측정값을 삭제
