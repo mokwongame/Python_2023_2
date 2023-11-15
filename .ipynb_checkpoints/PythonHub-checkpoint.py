@@ -91,7 +91,7 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         self.volts = () # 전압 측정값을 담은 튜플; (): 현재 변수를 tuple로 초기화
         self.voltTimes = () # 전압 측정 시간을 담은 tuple(튜플)
     def printVoltTuple(self):
-        for (volt, measTime) in zip(self.volts, self.voltTimes)  :
+        for (volt, measTime) in zip(self.volts, self.voltTimes):
             print(f'volt = {volt} @ time = {time.ctime(measTime)}') ## f: formatted string을 의미; {...} 안을 코드로 인식해 실행 -> 그 결과는 문자열로 반환; ctime(): char time -> 현재 에포크 타임을 보기 편한 문자열 시간으로 변경
     def sampleVoltTuble(self, nCount, delay): # delay 주기로 nCount개의 전압 측정값을 샘플링 -> 샘플링 결과는 volts, voltTimes 튜플에 저장
         #for i in range(nCount): # 단순 반복문
@@ -101,7 +101,9 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         while i < nCount:
             bResult = self.addVoltToTuple()
             print(bResult)
-            if bResult: i += 1
+            if bResult:
+                i += 1 # addVoltToTuple() 성공할 경우(bResult == True)에만 i를 1만큼 증가
+                PythonHub.wait(delay)
     def countVoltTable(self):
         self.connectDb()
         self.writeDb('SELECT COUNT(*) FROM volt_table')
@@ -121,9 +123,13 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         self.connectDb()
         self.writeDb('TRUNCATE volt_table')
         self.closeDb()
-    def saveVoltTubleIntoTable(self): # volts, voltTimes 튜플을 DB에 저장; volts, voltTimes는 clear
-        pass
-    def loadVoltTubleFromTable(self): # DB에서 정보를 가져와서 volts, voltTimes 튜플에 추가
+    def saveVoltTupleIntoTable(self): # volts, voltTimes 튜플을 DB에 저장; volts, voltTimes는 clear
+        self.connectDb()
+        for (volt, measTime) in zip(self.volts, self.voltTimes):
+            self.writeDb(f'INSERT INTO volt_table(meas_time, volt) VALUES({measTime}, {volt})')
+        self.closeDb()
+        self.clearVoltTuple()
+    def loadVoltTupleFromTable(self): # DB에서 정보를 가져와서 volts, voltTimes 튜플에 추가
         pass
 
     # 조도계 메소드
