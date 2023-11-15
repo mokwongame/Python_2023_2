@@ -1,5 +1,6 @@
 from serial import Serial
 import time # time 모듈을 수입: 시간 관련 함수의 집합체
+import psycopg2
 
 # public 멤버(클래스 외부에서 편하게 접근 가능): __이름__
 # private 멤버(클래스 외부에서 접근 불가능(?), 특별한 부호 붙이면 접근 가능): __이름
@@ -55,6 +56,14 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         self.talk(sCmd)
         return self.listen()
 
+    # DB 메소드
+    def connectDb(self):
+        pass
+    def closeDb(self):
+        pass
+    def writeDb(self, cmd): # DB에 명령어 cmd 쓰기
+        pass
+    
     # 전압계 메소드
     def getVolt(self):
         try: # 코드 시도(try)
@@ -78,6 +87,12 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
     def printVoltTuple(self):
         for (volt, measTime) in zip(self.volts, self.voltTimes)  :
             print(f'volt = {volt} @ time = {time.ctime(measTime)}') ## f: formatted string을 의미; {...} 안을 코드로 인식해 실행 -> 그 결과는 문자열로 반환; ctime(): char time -> 현재 에포크 타임을 보기 편한 문자열 시간으로 변경
+    def countVoltTable(self):
+        pass
+    def insertVoltTable(self): # 전압 측정값 하나를 DB에 추가
+        pass
+    def clearVoltTable(self): # DB에 저장된 전압 측정값을 삭제
+        pass
 
     # 조도계 메소드
     def getLight(self):
