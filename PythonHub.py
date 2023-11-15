@@ -102,7 +102,14 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         self.closeDb()
         return nCount
     def insertOneVoltTable(self): # 전압 측정값 하나(one)를 DB에 추가
-        pass
+        self.connectDb()
+        measTime = time.time()
+        volt = self.getVolt()
+        if volt >= 0.:
+            self.writeDb(f'INSERT INTO volt_table(meas_time, volt) VALUES({measTime}, {volt})')
+            self.closeDb()
+            return True
+        else: return False # 전압 측정 실패 경우
     def clearVoltTable(self): # DB에 저장된 전압 측정값을 삭제
         self.connectDb()
         self.writeDb('TRUNCATE volt_table')

@@ -1,4 +1,4 @@
 chcp 65001
 git add --all
-git commit -m "11주차 보강 과제 제시"
+git commit -m "insertOneVoltTable 메소드 추가"
 git push -u origin master
