@@ -102,7 +102,9 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
     def insertVoltTable(self): # 전압 측정값 하나를 DB에 추가
         pass
     def clearVoltTable(self): # DB에 저장된 전압 측정값을 삭제
-        pass
+        self.connectDb()
+        self.writeDb('TRUNCATE volt_table')
+        self.closeDb()
 
     # 조도계 메소드
     def getLight(self):
