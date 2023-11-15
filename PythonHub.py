@@ -93,18 +93,24 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
     def printVoltTuple(self):
         for (volt, measTime) in zip(self.volts, self.voltTimes)  :
             print(f'volt = {volt} @ time = {time.ctime(measTime)}') ## f: formatted string을 의미; {...} 안을 코드로 인식해 실행 -> 그 결과는 문자열로 반환; ctime(): char time -> 현재 에포크 타임을 보기 편한 문자열 시간으로 변경
+    def sampleVoltTuble(self, nCount, delay): # delay 주기로 nCount개의 전압 측정값을 샘플링 -> 샘플링 결과는 volts, voltTimes 튜플에 저장
+        pass
     def countVoltTable(self):
         self.connectDb()
         self.writeDb('SELECT COUNT(*) FROM volt_table')
         nCount = self.cur.fetchone()[0]
         self.closeDb()
         return nCount
-    def insertVoltTable(self): # 전압 측정값 하나를 DB에 추가
+    def insertOneVoltTable(self): # 전압 측정값 하나(one)를 DB에 추가
         pass
     def clearVoltTable(self): # DB에 저장된 전압 측정값을 삭제
         self.connectDb()
         self.writeDb('TRUNCATE volt_table')
         self.closeDb()
+    def saveVoltTubleIntoTable(self): # volts, voltTimes 튜플을 DB에 저장; volts, voltTimes는 clear
+        pass
+    def loadVoltTubleFromTable(self): # DB에서 정보를 가져와서 volts, voltTimes 튜플에 추가
+        pass
 
     # 조도계 메소드
     def getLight(self):
