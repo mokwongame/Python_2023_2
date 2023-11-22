@@ -109,6 +109,8 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
                 PythonHub.wait(delay)
     def getVoltMean(self): # 전압의 평균
         return stat.mean(self.volts)
+    def getVoltVar(self): # 전압의 분산
+        return stat.variance(self.volts)
     def getVoltStdev(self): # 전압의 표준 편차
         return stat.stdev(self.volts)
     def plotVoltTuple(self):
@@ -181,7 +183,24 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
     def printLightTuple(self):
         for (light, lightStep, measTime) in zip(self.lights, self.lightSteps, self.lightTimes):
             print(f'light = {light}, step = {lightStep} @ time = {time.ctime(measTime)}')
-            
+    def sampleLightTuble(self, nCount, delay):
+        i = 0 # 에러 처리까지 하는 반복문
+        while i < nCount:
+            bResult = self.addLightToTuple()
+            print(bResult)
+            if bResult:
+                i += 1
+                PythonHub.wait(delay)
+    def getLightMean(self): # 평균
+        return stat.mean(self.lightSteps)
+    def getLightVar(self): # 분산
+        return stat.variance(self.lightSteps)
+    def getLightStdev(self): # 표준 편차
+        return stat.stdev(self.lightSteps)
+    def plotLightTuple(self):
+        plt.plot(self.lightTimes, self.lightSteps)
+        plt.show()    
+        
     # Servo 메소드
     def setServoMove(self, ang): # ang만큼 각도 회전
         try:
