@@ -1,6 +1,8 @@
 from serial import Serial
 import time # time 모듈을 수입: 시간 관련 함수의 집합체
 import psycopg2
+import statistics as stat
+import matplotlib.pyplot as plt
 
 # public 멤버(클래스 외부에서 편하게 접근 가능): __이름__
 # private 멤버(클래스 외부에서 접근 불가능(?), 특별한 부호 붙이면 접근 가능): __이름
@@ -104,6 +106,13 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
             if bResult:
                 i += 1 # addVoltToTuple() 성공할 경우(bResult == True)에만 i를 1만큼 증가
                 PythonHub.wait(delay)
+    def getVoltMean(self): # 전압의 평균
+        return stat.mean(self.volts)
+    def getVoltStdev(self): # 전압의 표준 편차
+        return stat.stdev(self.volts)
+    def plotVoltTuple(self):
+        plt.plot(self.voltTimes, self.volts)
+        plt.show()
     def countVoltTable(self):
         self.connectDb()
         self.writeDb('SELECT COUNT(*) FROM volt_table')
