@@ -26,6 +26,7 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         self.ard = Serial(comName, comBps) # C++ 경우: Serial ard;
         self.clearSerial() # Serial 입력 버퍼 초기화
         self.clearVoltTuple() # 전압과 측정 시간을 위한 튜플 공간 확보
+        self.clearLightTuple()
         self.conn = None # DB의 connection
         self.cur = None # DB의 cursor
     # 소멸자(destructor): 이름은 __del__으로 고정
@@ -162,8 +163,25 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
             return nLightStep
         except:
             print('Serial error!')
-            return ''            
-    
+            return -1
+    def addLightToTuple(self):
+        light = self.getLight()
+        lightStep = self.getLightStep()
+        measTime = time.time() # 현재 시간 읽기: 에포크 타임(기원후 시간, epoch time)
+        if lightStep >= 0 and len(light) > 0: # 측정 성공
+            self.lights += (light,) # 원소 하나인 튜플은 마지막에 , 추가
+            self.lightSteps += (lightStep,)
+            self.lightTimes += (measTime,)
+            return True
+        else: return False # 측정 실패
+    def clearLightTuple(self):
+        self.lights = ()
+        self.lightSteps = ()
+        self.lightTimes = ()
+    def printLightTuple(self):
+        for (light, lightStep, measTime) in zip(self.lights, self.lightSteps, self.lightTimes):
+            print(f'light = {light}, step = {lightStep} @ time = {time.ctime(measTime)}')
+            
     # Servo 메소드
     def setServoMove(self, ang): # ang만큼 각도 회전
         try:
