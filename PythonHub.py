@@ -199,7 +199,32 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         return stat.stdev(self.lightSteps)
     def plotLightTuple(self):
         plt.plot(self.lightTimes, self.lightSteps)
-        plt.show()    
+        plt.show()
+    def countLightTable(self):
+        self.connectDb()
+        self.writeDb('SELECT COUNT(*) FROM light_table')
+        nCount = self.cur.fetchone()[0]
+        self.closeDb()
+        return nCount
+    def clearLightTable(self):
+        self.connectDb()
+        self.writeDb('TRUNCATE light_table')
+        self.closeDb()
+    def saveLightTupleIntoTable(self):
+        self.connectDb()
+        for (light, lightStep, measTime) in zip(self.lights, self.lightSteps, self.lightTimes):
+            self.writeDb(f"INSERT INTO light_table(meas_time, light, light_step) VALUES({measTime}, '{light}', {lightStep})")
+        self.closeDb()
+        self.clearLightTuple()
+    def loadLightTupleFromTable(self):
+        self.connectDb()
+        self.writeDb('SELECT meas_time, light, light_step FROM light_table')
+        result = self.cur.fetchall()
+        for record in result:
+            self.lightTimes += (record[0],)
+            self.lights += (record[1],)
+            self.lightSteps += (record[2],)
+        self.closeDb()
         
     # Servo 메소드
     def setServoMove(self, ang): # ang만큼 각도 회전
