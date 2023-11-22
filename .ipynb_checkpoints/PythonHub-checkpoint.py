@@ -130,7 +130,13 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         self.closeDb()
         self.clearVoltTuple()
     def loadVoltTupleFromTable(self): # DB에서 정보를 가져와서 volts, voltTimes 튜플에 추가
-        pass
+        self.connectDb()
+        self.writeDb('SELECT meas_time, volt FROM volt_table')
+        result = self.cur.fetchall()
+        for record in result:
+            self.voltTimes += (record[0],)
+            self.volts += (record[1],)
+        self.closeDb()
 
     # 조도계 메소드
     def getLight(self):
