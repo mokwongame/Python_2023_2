@@ -155,6 +155,14 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
         except:
             print('Serial error!')
             return ''
+    def getLightStep(self):
+        try:
+            sLightStep = self.talkListen('get lightstep')
+            nLightStep = int(sLightStep)
+            return nLightStep
+        except:
+            print('Serial error!')
+            return ''            
     
     # Servo 메소드
     def setServoMove(self, ang): # ang만큼 각도 회전
