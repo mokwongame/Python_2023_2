@@ -3,6 +3,7 @@ import time # time 모듈을 수입: 시간 관련 함수의 집합체
 import psycopg2
 import statistics as stat
 import matplotlib.pyplot as plt
+import pandas.io.sql as psql
 
 # public 멤버(클래스 외부에서 편하게 접근 가능): __이름__
 # private 멤버(클래스 외부에서 접근 불가능(?), 특별한 부호 붙이면 접근 가능): __이름
@@ -157,6 +158,16 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
             i += 1
         html += '</table>'
         return html
+    def describeVoltTable(self):
+        self.conn = psycopg2.connect(host='localhost', database='postgres', user='postgres', password='2023', port='5432')
+        df = psql.read_sql('SELECT * FROM volt_table', self.conn)
+        self.conn.close()
+        ser = df['volt']
+        print(f'개수 = {len(df)}')
+        print(f'평균 = {ser.mean()}')
+        print(f'중앙값 = {ser.median()}')
+        print(f'분산 = {ser.var()}')
+        print(f'표준편차 = {ser.std()}')
 
     # 조도계 메소드
     def getLight(self):
@@ -233,6 +244,16 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
             self.lights += (record[1],)
             self.lightSteps += (record[2],)
         self.closeDb()
+    def describeLightTable(self):
+        self.conn = psycopg2.connect(host='localhost', database='postgres', user='postgres', password='2023', port='5432')
+        df = psql.read_sql('SELECT * FROM light_table', self.conn)
+        self.conn.close()
+        ser = df['light_step']
+        print(f'개수 = {len(df)}')
+        print(f'평균 = {ser.mean()}')
+        print(f'중앙값 = {ser.median()}')
+        print(f'분산 = {ser.var()}')
+        print(f'표준편차 = {ser.std()}')
         
     # Servo 메소드
     def setServoMove(self, ang): # ang만큼 각도 회전
