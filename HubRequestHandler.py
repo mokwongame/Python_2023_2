@@ -9,6 +9,9 @@ class HubRequestHandler(SimpleHTTPRequestHandler): # SimpleHTTPRequestHandler를
         if result.path == '/': self.writeHome() # 홈
         elif result.path == '/meas_one_volt': self.writeMeasOneVolt()
         elif result.path == '/sample_volt': self.writeSampleVolt(result.query)
+        elif result.path == '/servo_move_0': self.writeServoMove(0)
+        elif result.path == '/servo_move_90': self.writeServoMove(90)
+        elif result.path == '/servo_move_180': self.writeServoMove(180)
         else: result.writeNotFound() # 페이지가 없음
     def writeHead(self, nStatus): # response의 header
         self.send_response(nStatus)
@@ -76,7 +79,18 @@ class HubRequestHandler(SimpleHTTPRequestHandler): # SimpleHTTPRequestHandler를
         html += self.server.gateway.writeHtmlVoltTuple()
         html += '</body></html>'
         self.writeHtml(html)
-        
+    def writeServoMove(self, ang):
+        self.writeHead(200) # 200: 성공
+        nTime = time.time()
+        self.server.gateway.setServoMove(ang)
+        html = '<html><head>'
+        html += '<meta http-equiv="content-type" content="text/html" charset="UTF-8">'
+        html += '<title>모터 이동</title>'
+        html += '</head><body>'
+        html += f'<div><h5>이동 시작 시간: {time.ctime(nTime)}</h5></div>'
+        html += f'<div><p>모터를 {ang}도 위치로 이동했습니다.</p></div>'
+        html += '</body></html>'
+        self.writeHtml(html)
 
 
     
