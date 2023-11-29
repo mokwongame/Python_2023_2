@@ -96,7 +96,7 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
     def printVoltTuple(self):
         for (volt, measTime) in zip(self.volts, self.voltTimes):
             print(f'volt = {volt} @ time = {time.ctime(measTime)}') ## f: formatted string을 의미; {...} 안을 코드로 인식해 실행 -> 그 결과는 문자열로 반환; ctime(): char time -> 현재 에포크 타임을 보기 편한 문자열 시간으로 변경
-    def sampleVoltTuble(self, nCount, delay): # delay 주기로 nCount개의 전압 측정값을 샘플링 -> 샘플링 결과는 volts, voltTimes 튜플에 저장
+    def sampleVoltTuple(self, nCount, delay): # delay 주기로 nCount개의 전압 측정값을 샘플링 -> 샘플링 결과는 volts, voltTimes 튜플에 저장
         #for i in range(nCount): # 단순 반복문
         #    print(self.addVoltToTuple())
         #    PythonHub.wait(delay)
@@ -183,7 +183,7 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
     def printLightTuple(self):
         for (light, lightStep, measTime) in zip(self.lights, self.lightSteps, self.lightTimes):
             print(f'light = {light}, step = {lightStep} @ time = {time.ctime(measTime)}')
-    def sampleLightTuble(self, nCount, delay):
+    def sampleLightTuple(self, nCount, delay):
         i = 0 # 에러 처리까지 하는 반복문
         while i < nCount:
             bResult = self.addLightToTuple()
