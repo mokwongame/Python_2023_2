@@ -149,6 +149,14 @@ class PythonHub: # 클래스(객체의 설계도), 인스턴스(클래스로 만
             self.voltTimes += (record[0],)
             self.volts += (record[1],)
         self.closeDb()
+    def writeHtmlVoltTuple(self):
+        html = '<table width="100%" border="1"><thead><tr><th>번호</th><th>전압 측정값</th><th>측정 일시</th></tr></thead>'
+        i = 1
+        for (volt, voltTime) in zip(self.volts, self.voltTimes):
+            html += f'<tr><td>{i}</td><td>{volt} V</td><td>{time.ctime(voltTime)}</td></tr>'
+            i += 1
+        html += '</table>'
+        return html
 
     # 조도계 메소드
     def getLight(self):

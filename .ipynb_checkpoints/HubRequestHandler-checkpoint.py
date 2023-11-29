@@ -39,12 +39,17 @@ class HubRequestHandler(SimpleHTTPRequestHandler): # SimpleHTTPRequestHandler를
         bResult = self.server.gateway.insertOneVoltTable() # gateway == PythonHub의 인스턴스
         if bResult: sResult = '성공'
         else: sResult = '실패'
+        nMeasCount = self.server.gateway.countVoltTable()
+        self.server.gateway.clearVoltTuple()
+        self.server.gateway.loadVoltTupleFromTable()
         html = '<html><head>'
         html += '<meta http-equiv="content-type" content="text/html" charset="UTF-8">'
         html += '<title>전압 한 번 측정</title>'
         html += '</head><body>'
         html += f'<div><h5>측정 시간: {time.ctime(nTime)}</h5></div>'
-        html += f'<div>전압 측정이 {sResult}했습니다.</div>'
+        html += f'<div><p>전압 측정이 {sResult}했습니다.</p>'
+        html += f'<p>현재까지 {nMeasCount}번 측정했습니다.</div>'
+        html += self.server.gateway.writeHtmlVoltTuple()
         html += '</body></html>'
         self.writeHtml(html)
 
